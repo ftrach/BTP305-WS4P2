@@ -1,0 +1,113 @@
+The difference between the implementations of a composition and an aggregation with reference to the classes used in this workshop. Note that both classes CheeseShop and CheeseParty have an attribute of type const Cheese** and yet they are in different relationships with class Cheese:
+
+
+Composition represents a "whole-part" relationship. In this case specifically, the "Cheese" objects are a part of "CheeseShop" class and cannot exist without the class. If the class is destroyed, all of the objects will also be destroyed. 
+
+Aggregation represents a "has-a" relationship. In this workshop specifically it means that the objects associated with the CheeseParty class can exist on their own. If CheeseParty gets removed, the objects can still exist.
+
+
+
+
+
+
+
+The difference between the implementations of move and copy functions in a composition and an aggregation with reference to the classes used in this workshop:
+
+
+
+The CheeseShop class conaints a member that is a pointer to an array of Cheese objects, at it is part of an aggregation. The move funtions in this case would typically involve shallow copying.
+
+
+The cheeseParty containts a member that is a dyanmically alloacted aray of Cheese objects, which makes it a composition. The move functions would involve transferring ownership. Dynamically alloacted. This would involve deep copying.
+
+The biggest difference between these two is the depth of copying.
+
+
+
+
+
+
+Both CheeseShop and CheeseParty classes have an addCheese function, how do they differ in implementation. Why?
+
+
+The biggest difference in the implententation between the two addCheese function's in both of the classes are due to the relationship type. In CheeseShop we have an aggregeation relationship and the objects are not directly owned so we have an implentation to specfically account for this. In CheeseParty the objects are owned so we also have a specific kind of implentation to account for this.
+
+
+
+
+
+The CheeseShop class doesn't have a removeCheese function like the CheeseParty does. How would you implement one to keep in line with how CheeseShop handles its cheeses? What else would need to change in the project? Use pseudocode to illustrate your idea
+
+
+To implement a removeCheese function in the CheeseShop class that keeps in line with how CheeseShop handles its cheeses ( which is an aggregation  ), we need to remove a specific Cheese from the whole collection.
+
+
+Here's some code which also includes all of the changes that we would need to make:
+
+
+class CheeseShop {
+public:
+
+
+    // All my other variables and functions
+
+    void removeCheese(const Cheese& cheeseToRemove) {
+
+
+        // Check if empty
+
+
+        if (shopCount == 0) {
+            return; // Nothing to remove
+        }
+
+
+
+        // Create new array
+
+
+        Cheese* newShopCheeses = new Cheese[shopCount - 1];
+        size_t newIndex = 0;
+
+
+
+        for (size_t i = 0; i < shopCount; ++i) {
+
+
+            if (shopCheeses[i] == cheeseToRemove) {
+                continue;
+            }
+
+
+            newShopCheeses[newIndex] = shopCheeses[i];
+            newIndex++;
+        }
+
+
+
+        //  Deallocate the old shopCheeses
+
+
+        delete[] shopCheeses;
+
+
+        //  Update shopCheeses and shopCount
+
+
+        shopCheeses = newShopCheeses;
+        shopCount--;
+
+  
+    }
+};
+
+
+
+
+
+
+The code above maintains the aggregation relationship.
+
+
+
+
